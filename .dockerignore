@@ -1,0 +1,11 @@
+# Ignore Git repository files
+.git
+.github
+
+# Ignore Python virtual environment and cache
+.venv
+__pycache__
+*.pyc
+
+# Ignore testing artifacts
+.pytest_cache
