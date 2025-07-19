@@ -30,7 +30,6 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-          pip install pytest  # Or any other test runner you use
 
       # 4. Run tests
       #    NOTE: Change this command if your tests are in a different folder or use a different command
