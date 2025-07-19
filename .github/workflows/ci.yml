@@ -32,11 +32,18 @@ jobs:
           pip install -r requirements.txt
 
       # 4. Run tests
-      #    NOTE: Change this command if your tests are in a different folder or use a different command
       - name: Run tests with pytest
         run: pytest
 
-      # 5. Log in to the GitHub Container Registry
+      # 5. NEW: Set up QEMU for multi-platform builds
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      # 6. NEW: Set up Docker Buildx
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      # 7. Log in to the GitHub Container Registry
       - name: Log in to GHCR
         uses: docker/login-action@v3
         with:
@@ -44,18 +51,18 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      # 6. NEW STEP: Convert repository name to lowercase
+      # 8. Convert repository name to lowercase
       - name: Lowercase repository name
         id: string
         run: echo "repo_name=$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_OUTPUT
 
-      # 7. MODIFIED STEP: Build and push Docker image
+      # 9. MODIFIED: Build and push multi-platform Docker image
       - name: Build and push Docker image
         uses: docker/build-push-action@v6
         with:
           context: .
           push: true
-          platforms: linux/amd64,linux/arm64  # <-- THIS IS THE KEY CHANGE did not work before
+          platforms: linux/amd64,linux/arm64  # <-- THIS IS THE KEY CHANGE
           tags: |
             ghcr.io/${{ steps.string.outputs.repo_name }}:latest
             ghcr.io/${{ steps.string.outputs.repo_name }}:${{ github.sha }}
