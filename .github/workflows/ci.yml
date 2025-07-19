@@ -44,10 +44,17 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      # 6. Build and push the Docker image
+      # 6. NEW STEP: Convert repository name to lowercase
+      - name: Lowercase repository name
+        id: string
+        run: echo "repo_name=$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_OUTPUT
+
+      # 7. MODIFIED STEP: Build and push Docker image
       - name: Build and push Docker image
         uses: docker/build-push-action@v6
         with:
           context: .
           push: true
-          tags: ghcr.io/${{ github.repository }}:latest,ghcr.io/${{ github.repository }}:${{ github.sha }}
+          tags: |
+            ghcr.io/${{ steps.string.outputs.repo_name }}:latest
+            ghcr.io/${{ steps.string.outputs.repo_name }}:${{ github.sha }}
