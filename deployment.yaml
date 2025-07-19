@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: iris-classifier-deployment
+spec:
+  replicas: 2 # Tells K8s to run 2 pods (instances) of your app
+  selector:
+    matchLabels:
+      app: iris-classifier
+  template:
+    metadata:
+      labels:
+        app: iris-classifier
+    spec:
+      containers:
+      - name: iris-classifier-container
+        image: <https://github.com/hussein343455/Iris-Flower-Classifier-API/actions/runs/16391799301/artifacts/3570249771> # e.g., ghcr.io/your-name/your-repo:latest
+        ports:
+        - containerPort: 80
