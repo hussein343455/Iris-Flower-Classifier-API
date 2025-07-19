@@ -4,11 +4,17 @@ import joblib
 from fastapi import FastAPI
 from pydantic import BaseModel
 import numpy as np
+from pathlib import Path
+
+# Gets the absolute path to the directory containing the current file (fastapi.py)
+BASE_DIR = Path(__file__).resolve().parent
 
 # uvicorn main: app --reload
 
+# Securely joins the base path with the rest of the path
+MODEL_PATH = BASE_DIR / "Models" / "iris_classifier.joblib"
 # Load the trained model when the app starts
-iris_model = joblib.load("Models/iris_classifier.joblib")
+iris_model = joblib.load(MODEL_PATH)
 # You might also have a label encoder or class names
 class_names = np.array(['setosa', 'versicolor', 'virginica'])
 
@@ -21,13 +27,6 @@ class IrisFeatures(BaseModel):
 
 
 app = FastAPI()
-
-
-# Example using a path parameter `item_id` and a query parameter `q`
-@app.get("/items/{item_id}")
-def read_item(item_id: int, q: Optional[str] = None):
-    return {"item_id": item_id, "q": q}
-
 
 @app.post("/predict/")
 def create_prediction(iris: IrisFeatures):
