@@ -14,6 +14,9 @@ spec:
     spec:
       containers:
       - name: iris-classifier-container
-        image: <https://github.com/hussein343455/Iris-Flower-Classifier-API/actions/runs/16391799301/artifacts/3570249771> # e.g., ghcr.io/your-name/your-repo:latest
+        # Use the image reference from the container registry
+        image: ghcr.io/hussein343455/iris-flower-classifier-api:d3afffb480b546ca394464fa5b7aa4488cd46bcc
         ports:
         - containerPort: 80
+      imagePullSecrets: # <-- ADD THIS SECTION
+        - name: ghcr-secret       # <-- AND THIS LINE
